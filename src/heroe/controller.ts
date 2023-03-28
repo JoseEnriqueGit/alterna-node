@@ -6,7 +6,6 @@ const heroRepository = AppDataSource.getRepository(Heroe);
 
 export const getAll = async (req: Request, res: Response) => {
 	const heroes = await heroRepository.find();
-	console.log(heroes);
 	return res.json(heroes);
 };
 
