@@ -5,102 +5,125 @@ import Heroe from "../models/heroe.entity";
 const heroRepository = AppDataSource.getRepository(Heroe);
 
 export const getAll = async (req: Request, res: Response) => {
-	const heroes = await heroRepository.find();
-	return res.json(heroes);
+	try {
+		const result = await heroRepository.find();
+		if (!result.length) {
+			return res.status(404).json({
+				message: "No se han encontrado registros",
+			});
+		}
+		res.status(200).json({
+			message: "Registros obtenidos exitosamente",
+			result,
+		});
+	} catch (error) {
+		res.status(500).json({
+			message: "Error al obtener los registros",
+			error,
+		});
+	}
 };
 
 export const getById = async (req: Request, res: Response) => {
 	const { id } = req.params;
 
-	const hero = await heroRepository.findOneBy({ id: Number.parseInt(id) });
-
-	if (!hero) {
-		return res.status(404).json({
-			message: `Hero with id: ${id}, not found`,
+	try {
+		const result = await heroRepository.findOneBy({ id: Number.parseInt(id) });
+		if (null) {
+			return res.status(404).json({
+				message: "No se han encontrado registros",
+			});
+		}
+		res.status(200).json({
+			message: "Registros obtenidos exitosamente",
+			result,
+		});
+	} catch (error) {
+		res.status(500).json({
+			message: "Error al obtener los registros",
+			error,
 		});
 	}
-
-	res.json(hero);
-};
-
-export const getByAlte = async (req: Request, res: Response) => {
-	const { alte } = req.params;
-
-	const hero = await heroRepository.findOneBy({ alte });
-
-	if (!hero) {
-		return res.status(404).json({
-			message: `Hero with Alte: ${alte}, not found`,
-		});
-	}
-
-	res.json(hero);
 };
 
 export const create = async (req: Request, res: Response) => {
-	const { alte, nombre } = req.body;
+	const { alte } = req.body;
 
-	const oldHero = await heroRepository.findOneBy({ alte });
+	try {
+		const existHero = await heroRepository.findOneBy({ alte });
+		if (existHero) {
+			res.status(400).json({
+				message: "Registro existente",
+			});
+		} else {
+			const result = await heroRepository.create(req.body);
+			await heroRepository.insert(result);
 
-	if (oldHero) {
-		return res.status(400).json({
-			message: `Hero ${alte} already exists`,
+			res.status(201).json({
+				message: "Registro creado exitosamente",
+				result,
+			});
+		}
+	} catch (error) {
+		res.status(500).json({
+			message: "Error al crear el registro",
+			error,
 		});
 	}
-
-	const newHero = heroRepository.create({ alte, nombre });
-	await heroRepository.insert(newHero);
-
-	res.json(newHero);
-};
-
-export const remove = async (req: Request, res: Response) => {
-	const { id } = req.params;
-
-	const oldHero = await heroRepository.findOneBy({ id: Number.parseInt(id) });
-
-	if (!oldHero) {
-		return res.status(404).json({
-			message: `Hero with id: ${id} not found`,
-		});
-	}
-
-	const deletedHero = await heroRepository.delete({ id: Number.parseInt(id) });
-
-	res.json({
-		affectedRows: deletedHero,
-	});
 };
 
 export const update = async (req: Request, res: Response) => {
 	const { id } = req.params;
 	const { alte, nombre } = req.body;
 
-	const heroById = await heroRepository.findOneBy({ id: Number.parseInt(id) });
-
-	if (!heroById) {
-		return res.status(404).json({
-			message: `Hero with id ${id} not found`,
-		});
-	}
-
-	if (alte) {
-		const oldHero = await heroRepository.findOneBy({ alte });
-
-		if (oldHero && oldHero.id !== Number.parseInt(id)) {
-			return res.status(400).json({
-				message: `Hero ${alte} already exists`,
+	try {
+		const result = await heroRepository.findOneBy({ id: Number.parseInt(id) });
+		if (!result) {
+			return res.status(404).json({
+				message: "No se han encontrado registros",
 			});
 		}
+		const updatedHero = heroRepository.create({
+			id: result.id,
+			alte: alte ? alte : result.alte,
+			nombre: nombre ? nombre : result.nombre,
+		});
+		await heroRepository.save(updatedHero);
+
+		res.status(200).json({
+			message: "Registro actualizado exitosamente",
+			updatedHero,
+		});
+	} catch (error) {
+		res.status(500).json({
+			message: "Error al actualizar el registro",
+			error,
+		});
 	}
+};
 
-	const updatedHero = heroRepository.create({
-		id: heroById.id,
-		alte: alte ? alte : heroById.alte,
-		nombre: nombre ? nombre : heroById.nombre,
-	});
+export const remove = async (req: Request, res: Response) => {
+	const { id } = req.params;
 
-	await heroRepository.save(updatedHero);
+	try {
+		const result = await heroRepository.findOneBy({ id: Number.parseInt(id) });
+		if (!result) {
+			return res.status(404).json({
+				message: "No se han encontrado registros",
+			});
+		}
+		const deletedHero = await heroRepository.delete({
+			id: Number.parseInt(id),
+		});
 
-	res.json(updatedHero);
+		res.status(200).json({
+			message: "Registro eliminado exitosamente",
+			deletedHero,
+		});
+	} catch (error) {
+		res.status(500).json({
+			message: "Error al eliminar el registro",
+			error,
+		});
+	}
 };
