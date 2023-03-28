@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { getAll, create, remove, update, getById } from "./controller";
-// import { check } from "express-validator";
 
 const heroeRoute = Router();
 
