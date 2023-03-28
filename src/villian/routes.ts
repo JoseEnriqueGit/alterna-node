@@ -1,16 +1,16 @@
 import { Router } from "express";
 import { getAll, create, remove, update, getById } from "./controller";
 
-const heroeRoute = Router();
+const villianRoute = Router();
 
-heroeRoute.get('/', getAll);
+villianRoute.get('/', getAll);
 
-heroeRoute.get('/:id', getById);
+villianRoute.get('/:id', getById);
 
-heroeRoute.post('/', create);
+villianRoute.post('/', create);
 
-heroeRoute.put('/:id', update);
+villianRoute.put('/:id', update);
 
-heroeRoute.delete('/:id', remove);
+villianRoute.delete('/:id', remove);
 
-export default heroeRoute
+export default villianRoute

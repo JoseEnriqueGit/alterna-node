@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import Heroe from "./src/models/heroe.entity";
+import Villian from "./src/models/villian.entity";
 
 const AppDataSource = new DataSource({
 	type: "mssql",
@@ -9,7 +10,7 @@ const AppDataSource = new DataSource({
 	username: "sa",
 	password: "Sa123456",
 	database: "backendalterna",
-	entities: [Heroe],
+	entities: [Heroe, Villian],
 	synchronize: false,
 	logging: false,
 	options: { encrypt: false },

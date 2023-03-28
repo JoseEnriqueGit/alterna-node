@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity()
-export default class Heroe {
+export default class Villian {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
@@ -11,10 +11,3 @@ export default class Heroe {
 	@Column("text")
 	alte!: string;
 }
-// documentacion
-// entry Level 0-6
-// junior 6meses-2
-// mid-level
-// senior
-// crud / sql view / procedure / trigger / join / subquery
-// ORM, Framework
