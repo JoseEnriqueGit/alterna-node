@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { getAll, getByAlte, create, remove, update, getById } from "./controller";
-import { check } from "express-validator";
+// import { check } from "express-validator";
 
-export const heroeRoute = Router();
+const heroeRoute = Router();
 
 heroeRoute.get('/', getAll);
 
@@ -15,3 +15,5 @@ heroeRoute.post('/', create);
 heroeRoute.delete('/:id', remove);
 
 heroeRoute.put('/:id', update);
+
+export default heroeRoute

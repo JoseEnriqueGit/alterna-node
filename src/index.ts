@@ -1,5 +1,5 @@
 import express from 'express';
-import { heroeRoute } from './heroe/routes';
+import heroeRoute from './heroe/routes';
 
 const port = 3000;
 const app = express();
